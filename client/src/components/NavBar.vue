@@ -2,10 +2,7 @@
   <nav class="navbar is-fixed-top">
     <div class="navbar-brand">
       <img src="../assets/logo.png" class="logo" />
-      <a class="navbar-item site-title" href="#">Cards For Humanity </a>
-      <a class="navbar-item site-title player-name" href="#">{{
-        playerName
-      }}</a>
+      <a class="navbar-item site-title" href="#">Who Am I?</a>
     </div>
   </nav>
 </template>
@@ -15,7 +12,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "NavBar",
-  props: { playerName: String },
+  props: { },
   methods: {},
 });
 </script>
@@ -42,10 +39,5 @@ export default defineComponent({
   text-decoration: none;
   color: black;
   font-size: larger;
-}
-
-.player-name {
-  margin-left: auto;
-  font-weight: bold;
 }
 </style>

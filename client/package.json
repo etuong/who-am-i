@@ -1,8 +1,8 @@
 {
-  "name": "cards-for-humanity",
-  "version": "0.1.0",
+  "name": "who-am-i-client",
+  "version": "1.0.0",
   "private": true,
-  "description": "Cards Against Humanity Web App",
+  "description": "Who Am I Web App",
   "author": {
     "name": "Ethan Uong"
   },
@@ -17,15 +17,10 @@
     "bulma": "^0.9.4",
     "bulma-list": "^1.2.0",
     "bulma-responsive-tables": "^1.2.5",
-    "bulma-switch": "^2.0.4",
     "bulma-toast": "^2.4.1",
     "core-js": "^3.8.3",
-    "jquery": "^3.6.0",
-    "jquery-ui-dist": "^1.13.1",
-    "jquery-ui-touch-punch": "^0.2.3",
     "node-sass": "^7.0.1",
     "sass-loader": "^13.0.0",
-    "splitpanes": "^3.1.1",
     "vue": "^3.2.13",
     "vue-3-socket.io": "^1.0.5",
     "vue-bulma-modal": "^2.0.0-alpha.2",
@@ -40,6 +35,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/etuong/cards-for-humanity.git"
+    "url": "https://github.com/etuong/who-am-i.git"
   }
 }
