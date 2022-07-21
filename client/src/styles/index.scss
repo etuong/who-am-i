@@ -1,0 +1,39 @@
+@import "~bulma/bulma";
+@import "~bulma-list/sass/bulma-list.sass";
+@import "~bulma-responsive-tables/bulma-responsive-tables";
+@import "bulma-switch/src/sass/index.sass";
+
+$primary: #325B84;
+$link: $primary;
+$info: #3498db;
+$success: #27ae60;
+$warning: #f1c40f;
+$danger: #e74c3c;
+$dark: #2c3e50;
+$light: #f5f5f5;
+$text: #2c3e50;
+
+:export {
+  primary: $primary;
+  light: darken($light, 10%);
+}
+
+html, body {
+  /* IE 10-11 didn't like using min-height */
+  height: 100%;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.splitpanes--vertical > .splitpanes__splitter {
+  min-width: 20px;
+  background: linear-gradient(90deg, whitesmoke, lightgray);
+}
