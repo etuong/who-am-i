@@ -2,11 +2,17 @@
 @import "~bulma-list/sass/bulma-list.sass";
 @import "~bulma-responsive-tables/bulma-responsive-tables";
 
-html, body {
+html, body{
   height: 100%;
 }
 
-#app {
+body, .navbar {
+  background: #ece9e6;
+  background: -webkit-linear-gradient(to right, #ece9e6, #ffffff);
+  background: linear-gradient(to right, #ece9e6, #ffffff); 
+}
+
+#app {  
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -14,4 +20,8 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+a.github {
+  color: red;
 }

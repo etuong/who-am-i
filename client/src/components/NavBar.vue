@@ -1,9 +1,11 @@
 <template>
   <nav class="navbar is-fixed-top">
-    <div class="navbar-brand">
-      <img src="../assets/logo.png" class="logo" />
-      <a class="navbar-item site-title" href="#">Who Am I?</a>
-    </div>
+    <a href="/">
+      <div class="navbar-brand">
+        <img src="../assets/logo.png" class="logo" />
+        <a class="navbar-item site-title" href="#">Who Am I?</a>
+      </div>
+    </a>
   </nav>
 </template>
 
@@ -12,7 +14,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "NavBar",
-  props: { },
+  props: {},
   methods: {},
 });
 </script>

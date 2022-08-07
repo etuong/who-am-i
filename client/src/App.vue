@@ -2,9 +2,11 @@
   <nav-bar />
   <div class="body-content">
     <home
+      v-if="showHomeView"
       class="animate__animated"
       :class="TRANSITIONS[Math.floor(Math.random() * TRANSITIONS.length)]"
     />
+    <lobby v-if="showLobbyView" />
   </div>
   <FooterComponent />
 </template>
@@ -14,15 +16,17 @@ import { defineComponent } from "vue";
 import FooterComponent from "@/components/Footer.vue";
 import Home from "@/views/HomeView.vue";
 import NavBar from "@/components/NavBar.vue";
+import Lobby from "@/views/LobbyView.vue";
 
 export default defineComponent({
   components: {
     FooterComponent,
     Home,
     NavBar,
+    Lobby,
   },
   data() {
-    return {};
+    return { showHomeView: false, showLobbyView: true };
   },
   methods: {},
   sockets: {

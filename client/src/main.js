@@ -5,7 +5,7 @@ import App from "./App.vue";
 import "./styles/index.scss";
 
 const connection =
-  process.env.NODE_ENV === "development" ? "http://localhost:8081" : "https://who-am-i.herokuapp.com/";
+  process.env.NODE_ENV === "development" ? "http://localhost:8081" : "https://who-am-i-webgame.herokuapp.com/";
 const app = createApp(App);
 app.use(
   new VueSocketIO({
