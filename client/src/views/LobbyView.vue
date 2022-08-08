@@ -1,33 +1,67 @@
 <template>
-  <section class="hero welcome is-small animate__animated animate__fadeIn">
+  <section class="hero animate__animated animate__fadeIn">
     <div class="hero-body">
       <div class="container">
         <div class="columns">
           <div class="column">
             <h1 class="title is-1">Hello, {{ currentPlayer?.name }}!</h1>
-            <h2 class="subtitle is-5">Are you ready?</h2>
+            <p class="is-5 mt-5">
+              Please type in a name for another player to guess
+            </p>
+
+            <input
+              class="guessing-name-input"
+              v-model="guessing_name"
+              type="text"
+              autocomplete="off"
+              placeholder="Enter a guessing character"
+              maxlength="40"
+            />
+            <br />
             <button
-              class="button is-info is-medium"
-              @click="setPlayerReady"
-              :disabled="currentPlayer?.ready"
+              class="button is-success mt-1 is-light"
+              @click="setGameReady"
+              :class="{ pulse: playersData?.isGameReady }"
+              :disabled="!playersData?.isGameReady"
             >
-              <strong>Ready!</strong>
+              <strong>Submit</strong>
             </button>
-            <br /><br />
-            <h2 class="title is-5">Let's wait for other players</h2>
-            <h2 class="subtitle is-5">
-              We need at least 3 players to start. As soon as all players are
+
+            <h2 class="waiting-title is-5 mt-5">
+              Let's wait for other players
+            </h2>
+            <h2 class="is-5">
+              We need at least 2 players to start. As soon as all players are
               ready, anyone can press the Start button to start playing!
             </h2>
             <button
-              class="button is-success is-medium"
+              class="button is-success is-light"
               @click="setGameReady"
               :class="{ pulse: playersData?.isGameReady }"
               :disabled="!playersData?.isGameReady"
             >
               <strong>Start!</strong>
             </button>
+
+            <h2 class="invite-title">Invite your friends!</h2>
+            <div class="invite-bar">
+              <div class="invite-input">
+                <input
+                  class="invite-field"
+                  type="text"
+                  readonly=""
+                  value="https://www.google.com"
+                />
+                <div class="invite-overlay">
+                  Hover over me to see the invite link!
+                </div>
+              </div>
+              <button class="button is-danger invite-copy-button is-light">
+                Copy
+              </button>
+            </div>
           </div>
+
           <div class="column">
             <div class="container">
               <div
@@ -60,22 +94,6 @@
             </div>
           </div>
         </div>
-
-        <h2 class="invite-title">Invite your friends!</h2>
-        <div class="invite-bar">
-          <div class="invite-input">
-            <input
-              class="invite-field"
-              type="text"
-              readonly=""
-              value="https://www.google.com"
-            />
-            <div class="invite-overlay">
-              Hover over me to see the invite link!
-            </div>
-          </div>
-          <button class="button is-danger invite-copy-button">Copy</button>
-        </div>
       </div>
     </div>
   </section>
@@ -88,11 +106,19 @@ export default defineComponent({
   name: "LobbyView",
   components: {},
   props: {
-    currentPlayer: Object,
+    //currentPlayer: Object,
   },
   data() {
     return {
-      playersData: undefined,
+      currentPlayer: { name: "Ethan Uong", ready: false },
+      playersData: {
+        players: [
+          { name: "Ethan Uong", ready: false },
+          { name: "Ethan Uong", ready: true },
+          { name: "Ethan Uong", ready: false },
+        ],
+      },
+      guessing_name: "",
     };
   },
   methods: {
@@ -120,6 +146,11 @@ export default defineComponent({
   border-left: 1px solid #dbdbdb;
 }
 
+.guessing-name-input {
+  width: 200px;
+  height: 32px;
+}
+
 [data-letters]:before {
   content: attr(data-letters);
   display: inline-block;
@@ -141,14 +172,21 @@ export default defineComponent({
   animation: blinker 2s linear infinite;
 }
 
+.waiting-title {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: larger;
+}
+
 .invite-title {
   text-align: center;
   font-size: 35px;
+  margin-top: 30px;
 }
 
 .invite-bar {
   display: flex;
-  width: 70%;
+  width: 100%;
   margin: auto;
 
   .invite-input {
@@ -227,7 +265,6 @@ export default defineComponent({
 
   .invite-bar {
     width: 100%;
-
     .invite-input {
       .invite-field,
       .invite-overlay {

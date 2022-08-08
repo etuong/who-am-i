@@ -1,6 +1,6 @@
 <template>
   <nav-bar />
-  <div class="body-content">
+  <div class="body-content hero is-fullheight">
     <home
       v-if="showHomeView"
       class="animate__animated"

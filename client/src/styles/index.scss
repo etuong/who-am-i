@@ -3,13 +3,13 @@
 @import "~bulma-responsive-tables/bulma-responsive-tables";
 
 html, body{
-  height: 100%;
+  height: auto;
 }
 
 body, .navbar {
   background: #ece9e6;
   background: -webkit-linear-gradient(to right, #ece9e6, #ffffff);
-  background: linear-gradient(to right, #ece9e6, #ffffff); 
+  background: linear-gradient(to right, #ece9e6, #ffffff);
 }
 
 #app {  

@@ -35,12 +35,27 @@
             >. Thank you!
           </p>
         </div>
-        <div class="buttons is-centered">
+        <div class="form-login is-centered">
+          <input
+            class="form-control"
+            v-model="name"
+            type="text"
+            autocomplete="off"
+            placeholder="Enter your name"
+            maxlength="32"
+          />
+
           <button
-            class="button is-danger is-medium"
+            class="button is-success"
             @click="showGameCreatorModal = !showGameCreatorModal"
           >
-            <strong>Create a Room</strong>
+            Play!
+          </button>
+          <button
+            class="button is-danger"
+            @click="showGameCreatorModal = !showGameCreatorModal"
+          >
+            Create Private Room
           </button>
         </div>
       </div>
@@ -107,7 +122,7 @@ export default defineComponent({
   name: "HomeView",
   components: { IconText },
   data() {
-    return {};
+    return { name: "" };
   },
   methods: {},
 });
@@ -116,6 +131,40 @@ export default defineComponent({
 <style lang="scss" scoped>
 .author-plead {
   font-size: 14px;
+}
+
+.form-login {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  gap: 10px;
+
+  .form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+    &:focus {
+      border-color: #66afe9;
+      outline: 0;
+      box-shadow: inset 0 0 2px #66afe9;
+    }
+  }
+
+  button {
+    width: 100%;
+  }
 }
 
 ul {
