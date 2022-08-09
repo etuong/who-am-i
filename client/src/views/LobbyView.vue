@@ -50,13 +50,16 @@
                   class="invite-field"
                   type="text"
                   readonly=""
-                  value="https://www.google.com"
+                  :value="hyperlink"
                 />
                 <div class="invite-overlay">
                   Hover over me to see the invite link!
                 </div>
               </div>
-              <button class="button is-danger invite-copy-button is-light">
+              <button
+                class="button is-danger invite-copy-button is-light"
+                @click="copyToClipBoard"
+              >
                 Copy
               </button>
             </div>
@@ -106,11 +109,11 @@ export default defineComponent({
   name: "LobbyView",
   components: {},
   props: {
-    //currentPlayer: Object,
+    currentPlayer: Object,
   },
   data() {
     return {
-      currentPlayer: { name: "Ethan Uong", ready: false },
+      // currentPlayer: { name: "Ethan Uong", ready: false },
       playersData: {
         players: [
           { name: "Ethan Uong", ready: false },
@@ -122,6 +125,10 @@ export default defineComponent({
     };
   },
   methods: {
+    copyToClipBoard() {
+      const hyperlink = window.location + this.currentPlayer?.roomId;
+      navigator.clipboard.writeText(hyperlink);
+    },
     setPlayerReady() {
       this.$socket.emit("player_ready", this.currentPlayer);
     },
@@ -132,6 +139,11 @@ export default defineComponent({
   sockets: {
     update_preparation(data) {
       this.playersData = data;
+    },
+  },
+  computed: {
+    hyperlink() {
+      return window.location + this.currentPlayer?.roomId;
     },
   },
 });

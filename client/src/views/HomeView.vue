@@ -40,22 +40,20 @@
             class="form-control"
             v-model="name"
             type="text"
-            autocomplete="off"
             placeholder="Enter your name"
             maxlength="32"
+            required
           />
 
           <button
-            class="button is-success"
-            @click="showGameCreatorModal = !showGameCreatorModal"
-          >
-            Play!
-          </button>
-          <button
+            v-if="isNewGame"
             class="button is-danger"
-            @click="showGameCreatorModal = !showGameCreatorModal"
+            @click="createPrivateRoom"
           >
             Create Private Room
+          </button>
+          <button v-else class="button is-success" @click="playGame">
+            Play!
           </button>
         </div>
       </div>
@@ -117,14 +115,53 @@
 <script>
 import { defineComponent } from "vue";
 import IconText from "../components/IconText.vue";
+import { toast } from "bulma-toast";
 
 export default defineComponent({
   name: "HomeView",
   components: { IconText },
   data() {
-    return { name: "" };
+    return { name: "", isNewGame: window.location.pathname === "/" };
   },
-  methods: {},
+  methods: {
+    showToast(message, type, duration = 3500) {
+      toast({
+        message,
+        type,
+        duration: duration,
+        position: "bottom-right",
+        animate: { in: "fadeIn", out: "fadeOut" },
+      });
+    },
+    playGame() {
+      if (this.name.length < 1) {
+        this.showToast("Name cannot be empty!", "is-danger");
+        return;
+      }
+
+      this.$socket.emit("create_new_room", {
+        name: this.name,
+      });
+    },
+    createPrivateRoom() {
+      if (this.name.length < 1) {
+        this.showToast("Name cannot be empty!", "is-danger");
+        return;
+      }
+
+      this.$socket.emit("create_new_room", {
+        name: this.name,
+      });
+    },
+  },
+  sockets: {
+    player_name_exist() {
+      this.showToast(
+        "Name has been taken in this private room. Please choose another name!",
+        "is-danger"
+      );
+    },
+  },
 });
 </script>
 

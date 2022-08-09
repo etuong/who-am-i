@@ -6,7 +6,7 @@
       class="animate__animated"
       :class="TRANSITIONS[Math.floor(Math.random() * TRANSITIONS.length)]"
     />
-    <lobby v-if="showLobbyView" />
+    <lobby v-if="showLobbyView" :currentPlayer="currentPlayer" />
   </div>
   <FooterComponent />
 </template>
@@ -17,6 +17,7 @@ import FooterComponent from "@/components/Footer.vue";
 import Home from "@/views/HomeView.vue";
 import NavBar from "@/components/NavBar.vue";
 import Lobby from "@/views/LobbyView.vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -26,12 +27,48 @@ export default defineComponent({
     Lobby,
   },
   data() {
-    return { showHomeView: false, showLobbyView: true };
+    return {
+      currentPlayer: undefined,
+      showHomeView: true,
+      showLobbyView: false,
+      showGameView: false,
+    };
   },
-  methods: {},
+  methods: {
+    showView(view) {
+      this.showHomeView = false;
+      this.showLobbyView = false;
+      this.showGameView = false;
+      switch (view) {
+        case "Home":
+          this.showHomeView = true;
+          break;
+        case "Lobby":
+          this.showLobbyView = true;
+          break;
+        case "Game":
+          this.showGameView = true;
+          break;
+        default:
+      }
+    },
+  },
   sockets: {
     connected() {
       console.log("Application socket is connected!");
+    },
+    invalid_room() {
+      this.$swal({
+        icon: "error",
+        title: "Oops...",
+        text: "This room does not exist. Please check your URL or create a new room!",
+      });
+    },
+    show_lobby() {
+      this.showView("Lobby");
+    },
+    update_player(currentPlayer) {
+      this.currentPlayer = currentPlayer;
     },
   },
   created() {
@@ -44,6 +81,12 @@ export default defineComponent({
       "animate__rotateInDownLeft",
       "animate__zoomIn",
     ];
+  },
+  mounted() {
+    const path = window.location.pathname.substring(1);
+    if (path) {
+      this.$socket.emit("check_room_validity", path);
+    }
   },
 });
 </script>

@@ -3,7 +3,10 @@
     <div class="is-flex-tablet is-justify-content-end">
       <p>
         Created by
-        <a className="github" href="https://github.com/etuong/who-am-i" target="_blank"
+        <a
+          className="github"
+          href="https://github.com/etuong/who-am-i"
+          target="_blank"
           >Ethan Uong</a
         >
         👨‍💻
