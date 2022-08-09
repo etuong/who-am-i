@@ -45,15 +45,8 @@
             required
           />
 
-          <button
-            v-if="isNewGame"
-            class="button is-danger"
-            @click="createPrivateRoom"
-          >
+          <button class="button is-danger" @click="createPrivateRoom">
             Create Private Room
-          </button>
-          <button v-else class="button is-success" @click="playGame">
-            Play!
           </button>
         </div>
       </div>
@@ -115,37 +108,17 @@
 <script>
 import { defineComponent } from "vue";
 import IconText from "../components/IconText.vue";
-import { toast } from "bulma-toast";
 
 export default defineComponent({
   name: "HomeView",
   components: { IconText },
   data() {
-    return { name: "", isNewGame: window.location.pathname === "/" };
+    return { name: "" };
   },
   methods: {
-    showToast(message, type, duration = 3500) {
-      toast({
-        message,
-        type,
-        duration: duration,
-        position: "bottom-right",
-        animate: { in: "fadeIn", out: "fadeOut" },
-      });
-    },
-    playGame() {
-      if (this.name.length < 1) {
-        this.showToast("Name cannot be empty!", "is-danger");
-        return;
-      }
-
-      this.$socket.emit("create_new_room", {
-        name: this.name,
-      });
-    },
     createPrivateRoom() {
       if (this.name.length < 1) {
-        this.showToast("Name cannot be empty!", "is-danger");
+        this.$emit("showToast", "Name cannot be empty!", "is-danger");
         return;
       }
 
@@ -154,14 +127,7 @@ export default defineComponent({
       });
     },
   },
-  sockets: {
-    player_name_exist() {
-      this.showToast(
-        "Name has been taken in this private room. Please choose another name!",
-        "is-danger"
-      );
-    },
-  },
+  sockets: {},
 });
 </script>
 

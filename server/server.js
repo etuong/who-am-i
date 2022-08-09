@@ -37,21 +37,21 @@ const io = require("socket.io")(server, {
 const Player = require("./Player");
 const GameRoom = require("./GameRoom");
 const gameRooms = new Map();
-const uniqid = require("uniqid");
 
 io.on("connection", (socket) => {
   // Ping a response from handshake
   socket.emit("connected");
 
   socket.on("check_room_validity", (roomId) => {
-    if (!gameRooms.has(roomId)) {
-      socket.emit("invalid_room");
+    if (gameRooms.has(roomId)) {
+      socket.emit("room_exists");
     }
   });
 
   socket.on("create_new_room", (data) => {
     // Only using five characters to make lives easier
-    const roomId = uniqid().substring(0, 5);
+    const uniqid = require("uniqid");
+    const roomId = uniqid("/");
 
     const newGameRoom = new GameRoom(roomId);
 
@@ -69,14 +69,73 @@ io.on("connection", (socket) => {
     socket.emit("update_player", newPlayer);
 
     // Inform all players of game status
-    // socket.emit("update_preparation", {
-    //   players: newGameRoom.players,
-    //   isGameReady: newGameRoom.isGameReady(),
-    // });
+    socket.emit("update_preparation", {
+      players: newGameRoom.players,
+      isGameReady: newGameRoom.isGameReady(),
+    });
 
     gameRooms.set(roomId, newGameRoom);
 
     console.log(`${data.name} has created a new game in room ${roomId}`);
+  });
+
+  socket.on("join_room", (data) => {
+    const roomId = data.id;
+    const gameRoom = gameRooms.get(roomId);
+
+    if (gameRoom.isGameInSession) {
+      socket.emit("game_in_session");
+      console.log(
+        `${data.name} tries to join room ${roomId} but game is in session`
+      );
+    } else if (gameRoom.isDuplicatePlayerName(data.name)) {
+      socket.emit("player_name_exist");
+    } else {
+      const newPlayer = new Player(data.name, socket.id, roomId);
+
+      gameRoom.addPlayerToRoom(newPlayer);
+
+      socket.join(roomId);
+
+      socket.emit("update_player", newPlayer);
+
+      io.sockets.in(roomId).emit("update_preparation", {
+        players: gameRoom.players,
+        isGameReady: gameRoom.isGameReady(),
+      });
+
+      console.log(`${data.name} has joined room ${roomId}`);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    gameRooms.forEach((gameRoom, roomId) => {
+      let players = gameRoom.players;
+      for (let player of players) {
+        if (player.id === socket.id) {
+          socket.leave(roomId);
+          io.sockets.in(roomId).emit("player_disconnect", player.name);
+          console.log(`${player.name} just left room ${roomId}`);
+
+          const number_of_current_players =
+            gameRoom.removePlayerFromRoom(player);
+
+          // Kick the other two players out if the third last player quits
+          if (gameRoom.isGameInSession && number_of_current_players < 1) {
+            gameRooms.delete(roomId);
+            io.sockets.in(roomId).emit("show_home");
+            console.log(`Deleting room ${roomId} because not enough players`);
+          } else {
+            io.sockets.in(roomId).emit("update_preparation", {
+              players: gameRoom.players,
+              isGameReady: gameRoom.isGameReady(),
+            });
+          }
+
+          break;
+        }
+      }
+    });
   });
 });
 

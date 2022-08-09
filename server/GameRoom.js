@@ -14,6 +14,26 @@ class GameRoom {
     this.players.push(newPlayer);
   }
 
+  isDuplicatePlayerName(name) {
+    return this.players.find((player) => player.name === name);
+  }
+
+  isGameReady() {
+    return (
+      this.players.length > 2 && this.players.every((player) => player.ready)
+    );
+  }
+
+  // When player's socket gets disconnected, remove the player
+  removePlayerFromRoom(player) {
+    const index = this.players.indexOf(player);
+    if (index > -1) {
+      this.players.splice(index, 1);
+    }
+
+    return this.players.length;
+  }
+
   startGame() {
     this.isGameInSession = true;
   }

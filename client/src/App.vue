@@ -3,6 +3,7 @@
   <div class="body-content hero is-fullheight">
     <home
       v-if="showHomeView"
+      @showToast="showToast"
       class="animate__animated"
       :class="TRANSITIONS[Math.floor(Math.random() * TRANSITIONS.length)]"
     />
@@ -18,6 +19,7 @@ import Home from "@/views/HomeView.vue";
 import NavBar from "@/components/NavBar.vue";
 import Lobby from "@/views/LobbyView.vue";
 import { useRoute } from "vue-router";
+import { toast } from "bulma-toast";
 
 export default defineComponent({
   components: {
@@ -35,6 +37,15 @@ export default defineComponent({
     };
   },
   methods: {
+    showToast(message, type, duration = 3500) {
+      toast({
+        message,
+        type,
+        duration: duration,
+        position: "bottom-right",
+        animate: { in: "fadeIn", out: "fadeOut" },
+      });
+    },
     showView(view) {
       this.showHomeView = false;
       this.showLobbyView = false;
@@ -52,20 +63,53 @@ export default defineComponent({
         default:
       }
     },
+    async registerPlayer() {
+      let name = await this.getName();
+      this.$socket.emit("join_room", {
+        id: window.location.pathname,
+        name,
+      });
+    },
+    async getName() {
+      const name = await this.$swal({
+        title: "Enter your name",
+        input: "text",
+        showCancelButton: false,
+        inputPlaceholder: "Your name is...",
+        inputAttributes: {
+          autocapitalize: "off",
+          autocorrect: "off",
+        },
+        inputValidator: (value) => {
+          if (!value) {
+            return "You need to have a name!";
+          }
+        },
+      });
+
+      return name.value;
+    },
   },
   sockets: {
     connected() {
       console.log("Application socket is connected!");
     },
-    invalid_room() {
-      this.$swal({
-        icon: "error",
-        title: "Oops...",
-        text: "This room does not exist. Please check your URL or create a new room!",
-      });
+    room_exists() {
+      this.showView("Lobby");
+      this.registerPlayer();
+    },
+    player_name_exist() {
+      this.showToast(
+        "This name has been taken. Please choose another name!",
+        "is-danger"
+      );
+      this.registerPlayer();
     },
     show_lobby() {
       this.showView("Lobby");
+    },
+    player_disconnect(quitter) {
+      this.showToast(`Player ${quitter} has left the room`, "is-warning");
     },
     update_player(currentPlayer) {
       this.currentPlayer = currentPlayer;
@@ -83,7 +127,7 @@ export default defineComponent({
     ];
   },
   mounted() {
-    const path = window.location.pathname.substring(1);
+    const path = window.location.pathname;
     if (path) {
       this.$socket.emit("check_room_validity", path);
     }

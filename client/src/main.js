@@ -17,5 +17,7 @@ app.use(
     connection,
   })
 );
-app.use(VueSweetalert2);
+app.use(VueSweetalert2, {
+  confirmButtonColor: "lightcoral",
+});
 app.mount("#app");

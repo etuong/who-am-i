@@ -114,19 +114,14 @@ export default defineComponent({
   data() {
     return {
       // currentPlayer: { name: "Ethan Uong", ready: false },
-      playersData: {
-        players: [
-          { name: "Ethan Uong", ready: false },
-          { name: "Ethan Uong", ready: true },
-          { name: "Ethan Uong", ready: false },
-        ],
-      },
+      playersData: undefined,
       guessing_name: "",
     };
   },
   methods: {
     copyToClipBoard() {
-      const hyperlink = window.location + this.currentPlayer?.roomId;
+      const hyperlink =
+        window.location.origin + this.currentPlayer?.roomId;
       navigator.clipboard.writeText(hyperlink);
     },
     setPlayerReady() {
@@ -143,7 +138,7 @@ export default defineComponent({
   },
   computed: {
     hyperlink() {
-      return window.location + this.currentPlayer?.roomId;
+      return window.location.origin + this.currentPlayer?.roomId;
     },
   },
 });
