@@ -13,6 +13,8 @@ class Player {
     this.ready = false;
 
     this.nameToGuess = "";
+
+    this.hasWon = false;
   }
 }
 

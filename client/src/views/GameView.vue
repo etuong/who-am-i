@@ -10,9 +10,7 @@
               turn, press the red button if you asked a No question to end your
               turn or the green button if you successfully made a correct guess.
             </p>
-            <table
-              class="table is-striped is-hoverable is-fullwidth is-bordered"
-            >
+            <table class="table is-fullwidth is-bordered">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -21,18 +19,25 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Ethan</td>
-                  <td>Happy</td>
-                  <td class="has-text-centered">&#x2714;</td>
-                </tr>
-                <tr>
-                  <td>Ethan</td>
-                  <td>Happy</td>
-                  <td class="flex">
+                <tr v-for="(player, index) in players" :key="index" :class="{won: player.hasWon}">
+                  <td>{{ player.name }}</td>
+                  <td
+                    v-if="player.id === currentPlayer.id && !player.hasWon"
+                    class="me"
+                  >
+                    Placeholder
+                  </td>
+                  <td v-else>{{ player.nameToGuess }}</td>
+                  <td
+                    v-if="
+                      currentGuesser.id === player.id &&
+                      currentGuesser.id === currentPlayer.id
+                    "
+                    class="flex"
+                  >
                     <button
                       class="button is-danger is-small game-ctl-btn"
-                      @click="createPrivateRoom"
+                      @click="endTurn"
                     >
                       End Turn
                     </button>
@@ -43,6 +48,13 @@
                       I Win!
                     </button>
                   </td>
+                  <td
+                    v-else-if="currentGuesser.id === player.id"
+                    class="has-text-centered"
+                  >
+                    &#x2714;
+                  </td>
+                  <td v-else></td>
                 </tr>
               </tbody>
             </table>
@@ -69,10 +81,10 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "GameView",
   props: {
-    msg: String,
+    currentPlayer: Object,
   },
   data() {
-    return {};
+    return { players: undefined, currentGuesser: undefined };
   },
   methods: {
     handleTextArea(event) {
@@ -85,6 +97,9 @@ export default defineComponent({
       } else if (newLength === 1) {
         event.target.value = `${bullet} ${event.target.value}`;
       }
+    },
+    endTurn() {
+      this.$socket.emit("end_turn", this.currentPlayer.roomId);
     },
     handleVictory() {
       this.$swal({
@@ -103,9 +118,19 @@ export default defineComponent({
             text: "Please spectate the remaining of the game",
             icon: "success",
             confirmButtonColor: "#49c78e",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$socket.emit("player_wins", this.currentPlayer);
+            }
           });
         }
       });
+    },
+  },
+  sockets: {
+    update_playground(data) {
+      this.players = data.players;
+      this.currentGuesser = data.currentGuesser;
     },
   },
 });
@@ -127,6 +152,15 @@ export default defineComponent({
 td.flex {
   display: flex;
   justify-content: space-evenly;
+}
+
+td.me {
+  color: transparent;
+  text-shadow: 0 0 8px #000;
+}
+
+tr.won {
+  background-color: lavenderblush;
 }
 
 .game-ctl-btn {

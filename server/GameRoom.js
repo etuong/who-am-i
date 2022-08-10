@@ -11,6 +11,10 @@ class GameRoom {
 
     // So no new players can join once game starts
     this.isGameInSession = false;
+
+    // Keep track of whose turn it is
+    this.currentGuesserIndex = -1;
+    this.currentGuesser = undefined;
   }
 
   addPlayerToRoom(newPlayer) {
@@ -35,6 +39,21 @@ class GameRoom {
     );
   }
 
+  // TODO: stack overflow
+  getNextGuesser() {
+    if (this.currentGuesserIndex + 1 === this.players.length) {
+      this.currentGuesserIndex = 0;
+    } else {
+      this.currentGuesserIndex += 1;
+    }
+
+    if (this.players[this.currentGuesserIndex].hasWon) {
+      this.getNextGuesser();
+    } else {
+      this.currentGuesser = this.players[this.currentGuesserIndex];
+    }
+  }
+
   // When player's socket gets disconnected, remove the player
   removePlayerFromRoom(player) {
     const index = this.players.indexOf(player);
@@ -57,7 +76,7 @@ class GameRoom {
 
     // Distribute the guesses to players
     this.shuffleArray(this.players);
-    for (let player in this.players) {
+    for (let player of this.players) {
       for (const [from, nameToGuess] of this.cards.entries()) {
         if (player.id !== from) {
           player.nameToGuess = nameToGuess;
@@ -66,6 +85,8 @@ class GameRoom {
         }
       }
     }
+
+    this.getNextGuesser();
   }
 }
 

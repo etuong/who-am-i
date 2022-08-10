@@ -1,5 +1,5 @@
 <template>
-  <nav-bar />
+  <nav-bar :playerName="currentPlayer && currentPlayer.name" />
   <div class="body-content hero is-fullheight">
     <home
       v-if="showHomeView"
@@ -8,7 +8,7 @@
       :class="TRANSITIONS[Math.floor(Math.random() * TRANSITIONS.length)]"
     />
     <lobby v-if="showLobbyView" :currentPlayer="currentPlayer" />
-    <game v-if="showGameView" />
+    <game v-if="showGameView" :currentPlayer="currentPlayer" />
   </div>
   <FooterComponent />
 </template>
@@ -34,9 +34,9 @@ export default defineComponent({
   data() {
     return {
       currentPlayer: undefined,
-      showHomeView: false,
+      showHomeView: true,
       showLobbyView: false,
-      showGameView: true,
+      showGameView: false,
     };
   },
   methods: {
@@ -116,6 +116,9 @@ export default defineComponent({
     },
     player_disconnect(quitter) {
       this.showToast(`Player ${quitter} has left the room`, "is-warning");
+    },
+    game_in_session() {
+      this.showToast("Looks like the game has started!", "is-danger");
     },
     update_player(currentPlayer) {
       this.currentPlayer = currentPlayer;

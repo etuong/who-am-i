@@ -135,14 +135,35 @@ io.on("connection", (socket) => {
     setTimeout(
       () =>
         io.sockets.in(roomId).emit("update_playground", {
-          currentBlackCard: gameRoom.currentBlackCard,
-          currentCzar: gameRoom.currentCzar,
-          czarMessage: "Please wait for other players to select a white card",
+          currentGuesser: gameRoom.currentGuesser,
+          players: gameRoom.players,
         }),
       100
     );
 
     console.log(`Room ${roomId} is playing!`);
+  });
+
+  socket.on("end_turn", (roomId) => {
+    const gameRoom = gameRooms.get(roomId);
+    gameRoom.getNextGuesser();
+    io.sockets.in(roomId).emit("update_playground", {
+      currentGuesser: gameRoom.currentGuesser,
+      players: gameRoom.players,
+    });
+  });
+
+  socket.on("player_wins", ({roomId, id}) => {
+    const gameRoom = gameRooms.get(roomId);
+    const selected_player = gameRoom.getPlayerById(id);
+    selected_player.hasWon = true;
+    gameRoom.getNextGuesser();
+    io.sockets.in(roomId).emit("update_playground", {
+      currentGuesser: gameRoom.currentGuesser,
+      players: gameRoom.players,
+    });
+
+    // TODO Notify winner
   });
 
   socket.on("disconnect", () => {

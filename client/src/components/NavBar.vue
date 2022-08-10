@@ -1,11 +1,14 @@
 <template>
   <nav class="navbar is-fixed-top">
-    <a href="/">
-      <div class="navbar-brand">
+    <div class="navbar-brand">
+      <a href="/" class="is-flex">
         <img src="../assets/logo.png" class="logo" />
         <a class="navbar-item site-title" href="#">Who Am I?</a>
-      </div>
-    </a>
+      </a>
+      <a class="navbar-item site-title player-name" href="#">{{
+        playerName
+      }}</a>
+    </div>
   </nav>
 </template>
 
@@ -14,7 +17,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "NavBar",
-  props: {},
+  props: { playerName: String },
   methods: {},
 });
 </script>
@@ -41,5 +44,10 @@ export default defineComponent({
   text-decoration: none;
   color: black;
   font-size: larger;
+}
+
+.player-name {
+  margin-left: auto;
+  font-weight: bold;
 }
 </style>
