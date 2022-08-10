@@ -3,18 +3,7 @@ class GameRoom {
     // This is the unique ID for the room. It's the room's password
     this.roomId = roomId;
 
-    // All players in the game room
-    this.players = [];
-
-    // All initial names to be distributed
-    this.cards = new Map();
-
-    // So no new players can join once game starts
-    this.isGameInSession = false;
-
-    // Keep track of whose turn it is
-    this.currentGuesserIndex = -1;
-    this.currentGuesser = undefined;
+    this.resetGame();
   }
 
   addPlayerToRoom(newPlayer) {
@@ -33,13 +22,16 @@ class GameRoom {
     return this.players.find((player) => player.name === name);
   }
 
+  get numPlayerStillPlaying() {
+    return this.players.filter((player) => !player.hasWon).length;
+  }
+
   isGameReady() {
     return (
       this.players.length > 1 && this.players.every((player) => player.ready)
     );
   }
 
-  // TODO: stack overflow
   getNextGuesser() {
     if (this.currentGuesserIndex + 1 === this.players.length) {
       this.currentGuesserIndex = 0;
@@ -87,6 +79,21 @@ class GameRoom {
     }
 
     this.getNextGuesser();
+  }
+
+  resetGame() {
+    // All players in the game room
+    this.players = [];
+
+    // All initial names to be distributed
+    this.cards = new Map();
+
+    // So no new players can join once game starts
+    this.isGameInSession = false;
+
+    // Keep track of whose turn it is
+    this.currentGuesserIndex = -1;
+    this.currentGuesser = undefined;
   }
 }
 

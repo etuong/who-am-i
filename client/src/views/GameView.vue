@@ -9,6 +9,7 @@
               guess! Yours is blurred out for obvious reason. When it's your
               turn, press the red button if you asked a No question to end your
               turn or the green button if you successfully made a correct guess.
+              * Highlighted rows mean that players guessed correctly.
             </p>
             <table class="table is-fullwidth is-bordered">
               <thead>
@@ -19,7 +20,11 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(player, index) in players" :key="index" :class="{won: player.hasWon}">
+                <tr
+                  v-for="(player, index) in players"
+                  :key="index"
+                  :class="{ won: player.hasWon }"
+                >
                   <td>{{ player.name }}</td>
                   <td
                     v-if="player.id === currentPlayer.id && !player.hasWon"
@@ -38,6 +43,7 @@
                     <button
                       class="button is-danger is-small game-ctl-btn"
                       @click="endTurn"
+                      :disabled="onlyOneGuessLeft"
                     >
                       End Turn
                     </button>
@@ -84,7 +90,11 @@ export default defineComponent({
     currentPlayer: Object,
   },
   data() {
-    return { players: undefined, currentGuesser: undefined };
+    return {
+      players: undefined,
+      currentGuesser: undefined,
+      onlyOneGuessLeft: false,
+    };
   },
   methods: {
     handleTextArea(event) {
@@ -106,9 +116,10 @@ export default defineComponent({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
+        allowOutsideClick: false,
         showCancelButton: true,
         confirmButtonColor: "#49c78e",
-        cancelButtonColor: "#FF3860 ",
+        cancelButtonColor: "#FF3860",
         confirmButtonText: "Yes, I guessed right!",
         cancelButtonText: "Just kidding!",
       }).then((result) => {
@@ -117,6 +128,7 @@ export default defineComponent({
             title: "Congratulations!",
             text: "Please spectate the remaining of the game",
             icon: "success",
+            allowOutsideClick: false,
             confirmButtonColor: "#49c78e",
           }).then((result) => {
             if (result.isConfirmed) {
@@ -131,6 +143,26 @@ export default defineComponent({
     update_playground(data) {
       this.players = data.players;
       this.currentGuesser = data.currentGuesser;
+      this.onlyOneGuessLeft = data.onlyOneGuessLeft;
+    },
+    game_over() {
+      this.$swal({
+        title: "Game Over!",
+        text: "Wow, that was so much fun! Play again?",
+        icon: "question",
+        allowOutsideClick: false,
+        showCancelButton: true,
+        confirmButtonColor: "#49c78e",
+        cancelButtonColor: "#FF3860",
+        confirmButtonText: "Yes, please!",
+        cancelButtonText: "No :(",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$socket.emit("play_again", this.currentPlayer);
+        } else {
+        this.$emit("showHome");
+        }
+      });
     },
   },
 });

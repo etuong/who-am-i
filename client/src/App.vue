@@ -8,7 +8,11 @@
       :class="TRANSITIONS[Math.floor(Math.random() * TRANSITIONS.length)]"
     />
     <lobby v-if="showLobbyView" :currentPlayer="currentPlayer" />
-    <game v-if="showGameView" :currentPlayer="currentPlayer" />
+    <game
+      v-if="showGameView"
+      :currentPlayer="currentPlayer"
+      @showHome="showHome"
+    />
   </div>
   <FooterComponent />
 </template>
@@ -66,6 +70,9 @@ export default defineComponent({
         default:
       }
     },
+    showHome() {
+      this.showView("Home");
+    },
     async registerPlayer() {
       let name = await this.getName();
       this.$socket.emit("join_room", {
@@ -78,6 +85,7 @@ export default defineComponent({
         title: "Enter your name",
         input: "text",
         showCancelButton: false,
+        allowOutsideClick: false,
         inputPlaceholder: "Your name is...",
         inputAttributes: {
           autocapitalize: "off",
@@ -119,6 +127,9 @@ export default defineComponent({
     },
     game_in_session() {
       this.showToast("Looks like the game has started!", "is-danger");
+    },
+    guess_right(name) {
+      this.showToast(`${name} guessed their card correctly!`, "is-success");
     },
     update_player(currentPlayer) {
       this.currentPlayer = currentPlayer;

@@ -43,8 +43,13 @@ io.on("connection", (socket) => {
   socket.emit("connected");
 
   socket.on("check_room_validity", (roomId) => {
-    if (gameRooms.has(roomId)) {
-      socket.emit("room_exists");
+    const gameRoom = gameRooms.get(roomId);
+    if (gameRoom) {
+      if (gameRoom.isGameInSession) {
+        socket.emit("game_in_session");
+      } else {
+        socket.emit("room_exists");
+      }
     }
   });
 
@@ -83,12 +88,7 @@ io.on("connection", (socket) => {
     const roomId = data.id;
     const gameRoom = gameRooms.get(roomId);
 
-    if (gameRoom.isGameInSession) {
-      socket.emit("game_in_session");
-      console.log(
-        `${data.name} tries to join room ${roomId} but game is in session`
-      );
-    } else if (gameRoom.isDuplicatePlayerName(data.name)) {
+    if (gameRoom.isDuplicatePlayerName(data.name)) {
       socket.emit("player_name_exist");
     } else {
       const newPlayer = new Player(data.name, socket.id, roomId);
@@ -110,6 +110,12 @@ io.on("connection", (socket) => {
 
   socket.on("player_wrote_guess", ({ guessing_name, player }) => {
     const gameRoom = gameRooms.get(player.roomId);
+
+    if (gameRoom.isGameInSession) {
+      socket.emit("game_in_session");
+      return;
+    }
+
     const selected_player = gameRoom.getPlayerById(player.id);
 
     gameRoom.addCard(guessing_name, player.id);
@@ -153,17 +159,47 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("player_wins", ({roomId, id}) => {
+  socket.on("player_wins", ({ roomId, id }) => {
     const gameRoom = gameRooms.get(roomId);
     const selected_player = gameRoom.getPlayerById(id);
     selected_player.hasWon = true;
-    gameRoom.getNextGuesser();
-    io.sockets.in(roomId).emit("update_playground", {
-      currentGuesser: gameRoom.currentGuesser,
+    io.sockets.in(roomId).emit("guess_right", selected_player.name);
+
+    const numPlayerStillPlaying = gameRoom.numPlayerStillPlaying;
+
+    if (numPlayerStillPlaying > 0) {
+      gameRoom.getNextGuesser();
+      io.sockets.in(roomId).emit("update_playground", {
+        currentGuesser: gameRoom.currentGuesser,
+        players: gameRoom.players,
+        onlyOneGuessLeft: numPlayerStillPlaying === 1,
+      });
+    } else {
+      gameRoom.resetGame();
+      io.sockets.in(roomId).emit("game_over");
+    }
+  });
+
+  socket.on("play_again", ({ name, roomId, id }) => {
+    const gameRoom = gameRooms.get(roomId);
+
+    if (gameRoom.isGameInSession) {
+      socket.emit("game_in_session");
+      return;
+    }
+
+    const newPlayer = new Player(name, id, roomId);
+    gameRoom.addPlayerToRoom(newPlayer);
+    socket.emit("update_player", newPlayer);
+
+    socket.emit("show_lobby");
+
+    io.sockets.in(roomId).emit("update_preparation", {
       players: gameRoom.players,
+      isGameReady: gameRoom.isGameReady(),
     });
 
-    // TODO Notify winner
+    console.log(`${name} in  room ${roomId} playing again`);
   });
 
   socket.on("disconnect", () => {

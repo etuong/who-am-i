@@ -9,22 +9,24 @@
               Please type in a name for another player to guess
             </p>
 
-            <input
-              class="guessing-name-input"
-              v-model="guessing_name"
-              type="text"
-              autocomplete="off"
-              placeholder="Enter a guessing character"
-              maxlength="40"
-            />
-            <br />
-            <button
-              class="button is-success mt-1 is-light"
-              @click="sendGuessingName"
-              :disabled="currentPlayer?.ready"
-            >
-              <strong>Submit</strong>
-            </button>
+            <form @submit.prevent="sendGuessingName">
+              <input
+                class="guessing-name-input"
+                v-model="guessing_name"
+                type="text"
+                autocomplete="off"
+                placeholder="Enter a character for someone else to guess"
+                maxlength="40"
+                minlength="1"
+                required
+              />
+              <br />
+              <input
+                type="submit"
+                class="button is-success mt-1 is-light guess-btn"
+                :disabled="currentPlayer?.ready"
+              />
+            </form>
 
             <h2 class="waiting-title is-5 mt-5">
               Let's wait for other players
@@ -155,8 +157,12 @@ export default defineComponent({
 }
 
 .guessing-name-input {
-  width: 200px;
+  width: 280px;
   height: 32px;
+}
+
+.guess-btn {
+  font-weight: 700;
 }
 
 [data-letters]:before {
