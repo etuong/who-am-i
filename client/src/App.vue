@@ -8,6 +8,7 @@
       :class="TRANSITIONS[Math.floor(Math.random() * TRANSITIONS.length)]"
     />
     <lobby v-if="showLobbyView" :currentPlayer="currentPlayer" />
+    <game v-if="showGameView" />
   </div>
   <FooterComponent />
 </template>
@@ -18,6 +19,7 @@ import FooterComponent from "@/components/Footer.vue";
 import Home from "@/views/HomeView.vue";
 import NavBar from "@/components/NavBar.vue";
 import Lobby from "@/views/LobbyView.vue";
+import Game from "@/views/GameView.vue";
 import { useRoute } from "vue-router";
 import { toast } from "bulma-toast";
 
@@ -27,13 +29,14 @@ export default defineComponent({
     Home,
     NavBar,
     Lobby,
+    Game,
   },
   data() {
     return {
       currentPlayer: undefined,
-      showHomeView: true,
+      showHomeView: false,
       showLobbyView: false,
-      showGameView: false,
+      showGameView: true,
     };
   },
   methods: {
@@ -108,6 +111,9 @@ export default defineComponent({
     show_lobby() {
       this.showView("Lobby");
     },
+    game_start() {
+      this.showView("Game");
+    },
     player_disconnect(quitter) {
       this.showToast(`Player ${quitter} has left the room`, "is-warning");
     },
@@ -128,9 +134,7 @@ export default defineComponent({
   },
   mounted() {
     const path = window.location.pathname;
-    if (path) {
-      this.$socket.emit("check_room_validity", path);
-    }
+    this.$socket.emit("check_room_validity", path);
   },
 });
 </script>

@@ -8,6 +8,11 @@ class Player {
     // So we know the game room that the player is in.
     // This is the room's password
     this.roomId = roomId;
+
+    // Confirmation from the lobby page
+    this.ready = false;
+
+    this.nameToGuess = "";
   }
 }
 

@@ -6,6 +6,9 @@ class GameRoom {
     // All players in the game room
     this.players = [];
 
+    // All initial names to be distributed
+    this.cards = new Map();
+
     // So no new players can join once game starts
     this.isGameInSession = false;
   }
@@ -14,13 +17,21 @@ class GameRoom {
     this.players.push(newPlayer);
   }
 
+  addCard(guess, from) {
+    this.cards.set(from, guess);
+  }
+
+  getPlayerById(player_id) {
+    return this.players.find(({ id }) => id === player_id);
+  }
+
   isDuplicatePlayerName(name) {
     return this.players.find((player) => player.name === name);
   }
 
   isGameReady() {
     return (
-      this.players.length > 2 && this.players.every((player) => player.ready)
+      this.players.length > 1 && this.players.every((player) => player.ready)
     );
   }
 
@@ -34,8 +45,27 @@ class GameRoom {
     return this.players.length;
   }
 
+  shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
   startGame() {
     this.isGameInSession = true;
+
+    // Distribute the guesses to players
+    this.shuffleArray(this.players);
+    for (let player in this.players) {
+      for (const [from, nameToGuess] of this.cards.entries()) {
+        if (player.id !== from) {
+          player.nameToGuess = nameToGuess;
+          this.cards.delete(from);
+          break;
+        }
+      }
+    }
   }
 }
 

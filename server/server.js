@@ -50,8 +50,8 @@ io.on("connection", (socket) => {
 
   socket.on("create_new_room", (data) => {
     // Only using five characters to make lives easier
-    const uniqid = require("uniqid");
-    const roomId = uniqid("/");
+    const randomId = require("random-id");
+    const roomId = "/" + randomId(5, "aA0");
 
     const newGameRoom = new GameRoom(roomId);
 
@@ -106,6 +106,43 @@ io.on("connection", (socket) => {
 
       console.log(`${data.name} has joined room ${roomId}`);
     }
+  });
+
+  socket.on("player_wrote_guess", ({ guessing_name, player }) => {
+    const gameRoom = gameRooms.get(player.roomId);
+    const selected_player = gameRoom.getPlayerById(player.id);
+
+    gameRoom.addCard(guessing_name, player.id);
+
+    selected_player.ready = true;
+
+    socket.emit("update_player", selected_player);
+
+    io.sockets.in(player.roomId).emit("update_preparation", {
+      players: gameRoom.players,
+      isGameReady: gameRoom.isGameReady(),
+    });
+
+    console.log(
+      `${player.name} in room ${player.roomId} wrote down ${guessing_name} to guess!`
+    );
+  });
+
+  socket.on("game_ready", (roomId) => {
+    const gameRoom = gameRooms.get(roomId);
+    gameRoom.startGame();
+    io.sockets.in(roomId).emit("game_start");
+    setTimeout(
+      () =>
+        io.sockets.in(roomId).emit("update_playground", {
+          currentBlackCard: gameRoom.currentBlackCard,
+          currentCzar: gameRoom.currentCzar,
+          czarMessage: "Please wait for other players to select a white card",
+        }),
+      100
+    );
+
+    console.log(`Room ${roomId} is playing!`);
   });
 
   socket.on("disconnect", () => {

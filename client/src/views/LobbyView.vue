@@ -20,9 +20,8 @@
             <br />
             <button
               class="button is-success mt-1 is-light"
-              @click="setGameReady"
-              :class="{ pulse: playersData?.isGameReady }"
-              :disabled="!playersData?.isGameReady"
+              @click="sendGuessingName"
+              :disabled="currentPlayer?.ready"
             >
               <strong>Submit</strong>
             </button>
@@ -32,7 +31,8 @@
             </h2>
             <h2 class="is-5">
               We need at least 2 players to start. As soon as all players are
-              ready, anyone can press the Start button to start playing!
+              ready, anyone can press the Start button to start playing! Note
+              that new players cannot join when the game is in session.
             </h2>
             <button
               class="button is-success is-light"
@@ -113,19 +113,20 @@ export default defineComponent({
   },
   data() {
     return {
-      // currentPlayer: { name: "Ethan Uong", ready: false },
       playersData: undefined,
       guessing_name: "",
     };
   },
   methods: {
     copyToClipBoard() {
-      const hyperlink =
-        window.location.origin + this.currentPlayer?.roomId;
+      const hyperlink = window.location.origin + this.currentPlayer?.roomId;
       navigator.clipboard.writeText(hyperlink);
     },
-    setPlayerReady() {
-      this.$socket.emit("player_ready", this.currentPlayer);
+    sendGuessingName() {
+      this.$socket.emit("player_wrote_guess", {
+        guessing_name: this.guessing_name,
+        player: this.currentPlayer,
+      });
     },
     setGameReady() {
       this.$socket.emit("game_ready", this.currentPlayer.roomId);
