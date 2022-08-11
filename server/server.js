@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
   socket.on("create_new_room", (data) => {
     // Only using five characters to make lives easier
     const randomId = require("random-id");
-    const roomId = "/" + randomId(5, "aA0");
+    const roomId = "/?" + randomId(5, "aA0");
 
     const newGameRoom = new GameRoom(roomId);
 
