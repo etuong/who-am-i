@@ -2,7 +2,17 @@
 
 > A guessing game where players use yes or no questions to guess the identity of a famous person or character! Questions are based upon the characteristics of a person or animal everyone will be able to identify. This game works well with any size group, however the larger the group, the more fun the game becomes.
 
+Home page welcomes you with instructions on how to play.
+
 ![alt text](screenshots/home.png)
+
+Lobby page stages you to play when everyone is ready.
+
+![alt text](screenshots/lobby.png)
+
+Game page simulates real life experience by orchestrating play time.
+
+![alt text](screenshots/game.png)
 
 ## Game Play
 1. Each player tries to guess their character by only asking Yes or No questions to gain clues
@@ -13,7 +23,7 @@
 1. It is recommended to use a teleconference software like Zoom to chat.
 
 ## How to play
-1. Visit game's **[website](https://etuong.github.io/cards-for-humanity/)** 🔗
+1. Visit game's **[website](https://who-am-i-webgame.herokuapp.com/)** 🔗
 2. Create a new room or join an existing one
 3. Invite your friends and give them the password to the room. You need at least three players to play.
 4. Enjoy 😊

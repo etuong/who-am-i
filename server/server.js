@@ -236,6 +236,15 @@ io.on("connection", (socket) => {
   });
 });
 
+app.get("/rooms", (req, res) => {
+  res.status(200).send({ rooms: [...gameRooms] });
+});
+
+app.get("/delete-all-messages", (_req, res) => {
+  deleteAllMessages();
+  res.status(200).send("All messages have been deleted!");
+});
+
 process.on("exit", function (code) {
   server.close();
   console.log("Server exit", code);
