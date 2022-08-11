@@ -9,12 +9,12 @@
               guess! Yours is blurred out for obvious reason. When it's your
               turn, press the red button if you asked a No question to end your
               turn or the green button if you successfully made a correct guess.
-              * Highlighted rows mean that players guessed correctly.
+              Highlighted rows mean that players guessed correctly.
             </p>
             <table class="table is-fullwidth is-bordered">
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Player</th>
                   <th>Card</th>
                   <th class="has-text-centered">Turn</th>
                 </tr>
@@ -160,7 +160,7 @@ export default defineComponent({
         if (result.isConfirmed) {
           this.$socket.emit("play_again", this.currentPlayer);
         } else {
-        this.$emit("showHome");
+          this.$emit("showHome");
         }
       });
     },

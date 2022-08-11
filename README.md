@@ -1,15 +1,15 @@
 # Who Am I
 
-> Traditional [Cards Against Humanity](https://en.wikipedia.org/wiki/Cards_Against_Humanity) game moved to online experience! App supports a kid friendly version, hence Cards For Humanity
+> A guessing game where players use yes or no questions to guess the identity of a famous person or character! Questions are based upon the characteristics of a person or animal everyone will be able to identify. This game works well with any size group, however the larger the group, the more fun the game becomes.
 
 ![alt text](screenshots/home.png)
 
-## Objectives
-1. Each player takes turn to be the Card Czar and plays a Black Card
-1. Everyone else answers the question by choosing one White card that fills in the blank
-1. The Card Czar shuffles all of the answers and shares each card combination and then picks a favorite
-1. Whoever played that answer keeps the Black Card as one Awesome Point
-1. Player with most points wins.
+## Game Play
+1. Each player tries to guess their character by only asking Yes or No questions to gain clues
+1. You continue asking questions if you ask with Yes as the answer
+1. Your turn ends if your question yields a No answer
+1. If it's not your turn to guess, you still participate by answering
+1. The player that first guesses their character wins
 1. It is recommended to use a teleconference software like Zoom to chat.
 
 ## How to play
@@ -22,7 +22,6 @@
 - client folder contains frontend related artifacts
   - ```yarn serve``` runs the application
   - ```yarn build``` builds the static resources
-  - ```yarn deploy``` deploys the static resources to your Github page
 - server folder contains backend related files
   - ```yarn start``` kicks off the server
 
@@ -37,16 +36,12 @@
       git subtree push --prefix server heroku master
       ```
 - Push client
-  - Use your preference to host your client app. I chose Github Page for its simplicity.
-  - Run ```yarn build``` and then ```yarn deploy```
+  - Use your preference to host your client app
   - Make sure main.js connects to your server (and not localhost)
 
 ### Technologies 🔧
 + [Vue.js](https://vuejs.org/)
 + [Socket.io](https://socket.io/)
-
-### API
-Card texts are downloaded and parsed from [here](https://crhallberg.com/cah/) 
 
 #### License ⚖️
 [MIT](https://en.wikipedia.org/wiki/MIT_License)
