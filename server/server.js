@@ -26,7 +26,10 @@ server.listen(port, () => {
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: ["http://localhost:8080", "https://etuong.github.io"],
+    origin: [
+      "http://localhost:8080",
+      "https://lighthearted-piroshki-24ee03.netlify.app",
+    ],
     credentials: true,
   },
   transports: ["polling", "websocket"],
