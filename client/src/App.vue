@@ -75,8 +75,10 @@ export default defineComponent({
     },
     async registerPlayer() {
       let name = await this.getName();
+      const { pathname, search } = window.location;
+      const path = pathname + search;
       this.$socket.emit("join_room", {
-        id: window.location.pathname,
+        id: path,
         name,
       });
     },
@@ -147,7 +149,8 @@ export default defineComponent({
     ];
   },
   mounted() {
-    const path = window.location.pathname;
+    const { pathname, search } = window.location;
+    const path = pathname + search;
     this.$socket.emit("check_room_validity", path);
   },
 });
