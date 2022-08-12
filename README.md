@@ -2,6 +2,12 @@
 
 > A guessing game where players use yes or no questions to guess the identity of a famous person or character! Questions are based upon the characteristics of a person or animal everyone will be able to identify. This game works well with any size group, however the larger the group, the more fun the game becomes.
 
+Have you ever played the Guess Who name game? Each player writes down a popular character for another player to guess by asking Yes or Not questions until they have gathered enough hints and clues. 
+
+The problem with playing this game in real life with a group of friends is that y'all may not always have paper and pen with you. If you use your cell phone to write, someone else will be holding it (eew, germs), not to mention the phone dimming on and off. Well, we can easily still have a great time because I built an interactive web version of the game! 
+
+[Try it out!](https://who-am-i-webgame.herokuapp.com/)
+
 Home page welcomes you with instructions on how to play.
 
 ![alt text](screenshots/home.png)
