@@ -6,7 +6,7 @@ Have you ever played the Guess Who name game? Each player writes down a popular 
 
 The problem with playing this game in real life with a group of friends is that y'all may not always have paper and pen with you. If you use your cell phone to write, someone else will be holding it (eew, germs), not to mention the phone dimming on and off. Well, we can easily still have a great time because I built an interactive web version of the game! 
 
-[Try it out!](https://who-am-i-webgame.herokuapp.com/)
+[Try it out!](https://who-am-i-webapp.netlify.app/)
 
 Home page welcomes you with instructions on how to play.
 
@@ -29,7 +29,7 @@ Game page simulates real life experience by orchestrating play time.
 1. It is recommended to use a teleconference software like Zoom to chat.
 
 ## How to play
-1. Visit game's **[website](https://who-am-i-webgame.herokuapp.com/)** 🔗
+1. Visit game's **[website](https://who-am-i-webapp.netlify.app/)** 🔗
 2. Create a new room or join an existing one
 3. Invite your friends and give them the password to the room. You need at least three players to play.
 4. Enjoy 😊
