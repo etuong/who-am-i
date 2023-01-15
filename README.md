@@ -51,6 +51,8 @@ Game page simulates real life experience by orchestrating play time.
       heroku git:remote -a your-app
       git subtree push --prefix server heroku master
       ```
+  - FYI since Heroku is no longer free, I would suggest to use Render (https://render.com/)
+
 - Push client
   - Use your preference to host your client app
   - Make sure main.js connects to your server (and not localhost)
@@ -58,6 +60,8 @@ Game page simulates real life experience by orchestrating play time.
 ### Technologies 🔧
 + [Vue.js](https://vuejs.org/)
 + [Socket.io](https://socket.io/)
++ Client is automatically built, deployed, and hosted on Netlify. 
++ Server is automatically built, deployed, and hosted on Render.
 
 #### License ⚖️
 [MIT](https://en.wikipedia.org/wiki/MIT_License)

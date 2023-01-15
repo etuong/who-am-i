@@ -8,7 +8,7 @@ const Constant = require("./Constants");
 app.use(logger("dev"));
 app.use(cors());
 app.get("/", (_, res) => {
-  res.redirect("https://lighthearted-piroshki-24ee03.netlify.app/");
+  res.redirect("https://who-am-i-webapp.netlify.app/");
 });
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

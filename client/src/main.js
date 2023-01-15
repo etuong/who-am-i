@@ -9,7 +9,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 const connection =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8081"
-    : "https://who-am-i-webgame.herokuapp.com/";
+    : "https://who-am-i.onrender.com/";
 const app = createApp(App);
 app.use(
   new VueSocketIO({
